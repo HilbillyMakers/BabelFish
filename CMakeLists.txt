@@ -7,7 +7,7 @@ set(DPICO_DEOPTIMIZED_DEBUG 1)
 include(pico_sdk_import.cmake)
 include(pico_extras_import_optional.cmake)
 
-set(PROJECT_NAME TemplatePicoProject)
+set(PROJECT_NAME BabelFish)
 
 project(${PROJECT_NAME} C CXX ASM)
 set(CMAKE_C_STANDARD 11)
@@ -34,8 +34,12 @@ if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
         endif()
 endif()
 
+add_subdirectory(usb_interface)
+
 add_executable(${PROJECT_NAME} main.c)
+
 target_link_libraries(${PROJECT_NAME} 
         pico_stdlib
         pico_time
+        lib_usbIf
 )
