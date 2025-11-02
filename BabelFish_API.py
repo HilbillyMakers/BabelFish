@@ -23,6 +23,20 @@ DIGITAL_WRITE_PIN           = chr(3)
 DIGITAL_DIRECTION_IN        = chr(0)
 DIGITAL_DIRECTION_OUT       = chr(1)
 
+""" PWM Commands """
+PWM_INIT_PIN                = chr(0)
+PWM_DEINIT_PIN              = chr(1)
+PWM_GET_WRAP_SIZE           = chr(2)
+PWM_SET_WRAP_SIZE           = chr(3)
+PWM_GET_DUTY_CYCLE          = chr(4)
+PWM_SET_DUTY_CYCLE          = chr(5)
+PWM_GET_FREQUENCY           = chr(6)
+PWM_SET_FREQUENCY           = chr(7)
+
+""" PWM Direction """
+PWM_DIRECTION_OUT           = chr(0)
+PWM_DIRECTION_IN            = chr(1)
+
 """ Digital Errors """
 
 DIGITAL_E_OK                = chr(0)
@@ -90,5 +104,53 @@ def set_DigitalPin(pinID, pinState):
     response = input_endpoint.read(64)
 
     print("Set_DigitalPin response: {}".format(''.join([chr(x) for x in response])))
+
+    return response
+
+def init_PwmPin(pinID, direction):
+    global output_endpoint
+    global input_endpoint
+
+    command_string = FUNCTION_PWM + PWM_INIT_PIN + chr(pinID) + direction
+    
+    output_endpoint.write(command_string)
+    print("Message " + command_string + " sent successfully")
+    
+    response = input_endpoint.read(64)
+
+    print("Init_PwmPin response: {}".format(''.join([chr(x) for x in response])))
+
+    return response
+
+def deinit_PwmPin(pinID):
+    global output_endpoint
+    global input_endpoint
+
+    command_string = FUNCTION_PWM + PWM_DEINIT_PIN + chr(pinID)
+    
+    output_endpoint.write(command_string)
+    print("Message " + command_string + " sent successfully")
+    
+    response = input_endpoint.read(64)
+
+    print("Deinit_PwmPin response: {}".format(''.join([chr(x) for x in response])))
+
+    return response
+
+def set_PwmDutyCycle(pinID, dutyCycle):
+    global output_endpoint
+    global input_endpoint
+
+    dutyCycleLower = int(dutyCycle / 256)
+    dutyCycleUpper = int(dutyCycle % 255)
+
+    command_string = FUNCTION_PWM + PWM_SET_DUTY_CYCLE + chr(pinID) + chr(dutyCycleUpper) + chr(dutyCycleLower)
+    
+    output_endpoint.write(command_string)
+    print("Message " + command_string + " sent successfully")
+    
+    response = input_endpoint.read(64)
+
+    print("Set_PwmDutyCycle response: {}".format(''.join([chr(x) for x in response])))
 
     return response

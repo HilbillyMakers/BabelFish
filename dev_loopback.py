@@ -23,5 +23,6 @@ import BabelFish_API as BF
 
 # print("Device Says: {}".format(''.join([chr(x) for x in from_device])))
 BF.initBabelFish()
-BF.init_DigitalPin(25)
-BF.set_DigitalPin(25, 0)
+BF.deinit_PwmPin    (25)
+BF.init_PwmPin      (25, BF.PWM_DIRECTION_OUT)
+BF.set_PwmDutyCycle (25, 0)

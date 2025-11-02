@@ -28,8 +28,8 @@
 #include "com/endpoint.h"
 #include "gpio/endpoint.h"
 
-#define usb_hw_set ((usb_hw_t *)hw_set_alias_untyped(usb_hw))
-#define usb_hw_clear ((usb_hw_t *)hw_clear_alias_untyped(usb_hw))
+#define usb_hw_set      ((usb_hw_t *)hw_set_alias_untyped(usb_hw))
+#define usb_hw_clear    ((usb_hw_t *)hw_clear_alias_untyped(usb_hw))
 
 // Function prototypes for our device specific endpoint handlers defined
 // later on
@@ -282,10 +282,10 @@ void usb_start_transfer(struct usb_endpoint_configuration *ep, uint8_t *buf, uin
 
     // Set pid and flip for next transfer
     val |= ep->next_pid ? USB_BUF_CTRL_DATA1_PID : USB_BUF_CTRL_DATA0_PID;
+    ep->next_pid ^= 1u;
     
     /* Write commands to control buffer */
     *ep->buffer_control = val;
-    ep->next_pid ^= 1u;
 }
 
 /**
@@ -564,9 +564,8 @@ static void usb_handle_buff_status()
 
 /**
  * @brief USB interrupt handler
- *
+ * @details "isr_usbctrl" is defined inside intctrl file, allowing the creation of a callback function locally
  */
-
 void isr_usbctrl(void)
 {
     // USB interrupt handler
@@ -586,15 +585,15 @@ void isr_usbctrl(void)
     }
 
     // Buffer status, one or more buffers have completed
-    if (status & USB_INTS_BUFF_STATUS_BITS)
+    if (status & USB_INTS_BUFF_STATUS_BITS) /* Raised when any bit in BUFF_STATUS is set */
     {
         /* Save Buffer_Status bit as handled */
         handled |= USB_INTS_BUFF_STATUS_BITS;
 
         usb_handle_buff_status();
     }
-
-    // Bus is reset
+    
+    // BUS_RESET            (0) Source: SIE_STATUS
     if (status & USB_INTS_BUS_RESET_BITS)
     {
         printf("BUS RESET\n");
@@ -608,11 +607,30 @@ void isr_usbctrl(void)
         usb_bus_reset();
     }
 
+
+    // VBUS_DETECT          - Source: SIE_STATUS
+    // STALL                - Source: SIE_STATUS
+    // ERROR_CRC            - Source: SIE_STATUS
+    // ERROR_BIT_STUFF      - Source: SIE_STATUS
+    // ERROR_RX_OVERFLOW    - Source: SIE_STATUS
+    // ERROR_RX_TIMEOUT     - Source: SIE_STATUS
+    // ERROR_DATA_SEQ       - Source: SIE_STATUS
+    // TRANS_COMPLETE       - Raised every time SIE_STATUS
+
+    // EP_STALL_NAK         - Raised when any bit in EP_STATUS_STALL_NAK is set
+    // ABORT_DONE           - Raised when any bit in ABORT_DONE is set
+    // DEV_SOF              - Set every time the device receives a SOF (Start of Frame) packet
+    // SETUP_REQ            - Device
+    // DEV_RESUME_FROM_HOST - Set when the device receives a resume from the host
+    // DEV_SUSPEND          - Set when the device suspend state changes
+    // DEV_CONN_DIS         - Set when the device connection state changes
+
     // Check if there's any unhandled IRQs remaining
     if (status ^ handled)
     {
         panic("Unhandled IRQ 0x%x\n", (uint) (status ^ handled));
     }
+
 }
 
 /**
