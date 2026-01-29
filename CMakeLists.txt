@@ -41,6 +41,8 @@ add_executable(${PROJECT_NAME} main.c)
 target_link_libraries(${PROJECT_NAME} 
         pico_stdlib
         pico_time
+        pico_multicore
+
         lib_usbIf
         lib_canIf
         lib_gpIf

@@ -6,10 +6,15 @@
 #include "digitalHandlers/digitalHandlers.h"
 #include "pwmHandlers/pwmHandlers.h"
 
-uint8_t gpio_commandStringHandler         (uint8_t *commandString,  uint8_t commandStringLength, uint8_t *responseBuffer, uint8_t *errorBuffer)
+void ep_gp_tx_handler(uint16_t len)
+{
+    
+}
+
+int8_t gpio_rx_commandStringHandler         (uint8_t *commandString,  uint8_t commandStringLength, uint8_t *responseBuffer, uint8_t *errorBuffer)
 {
     uint8_t commandType     = 0u;
-    uint8_t response_size   = 0u;
+    int8_t  response_size   = -1;
     
     *errorBuffer    = E_UNKNOWN;
     commandType     = commandString[0];

@@ -7,15 +7,20 @@
 #include "usb_interface.h"
 #include "usb_descriptors.h"
 
-extern void ep_can_rx_handler   (uint8_t const *buf, uint16_t len, uint8_t const *responseBuffer, uint16_t *responseSize);
-extern void ep_gp_rx_handler    (uint8_t const *buf, uint16_t len, uint8_t const *responseBuffer, uint16_t *responseSize);
-extern void ep_i2c_rx_handler   (uint8_t const *buf, uint16_t len, uint8_t const *responseBuffer, uint16_t *responseSize);
-extern void ep_spi_rx_handler   (uint8_t const *buf, uint16_t len, uint8_t const *responseBuffer, uint16_t *responseSize);
+extern int8_t com_can_rx_commandStringHandler (uint8_t const *buf, uint16_t len, uint8_t const *responseBuffer, uint8_t *errorCode);
+extern int8_t gpio_rx_commandStringHandler    (uint8_t const *buf, uint16_t len, uint8_t const *responseBuffer, uint8_t *errorCode);
+extern int8_t com_i2c_rx_commandStringHandler (uint8_t const *buf, uint16_t len, uint8_t const *responseBuffer, uint8_t *errorCode);
+extern int8_t com_spi_rx_commandStringHandler (uint8_t const *buf, uint16_t len, uint8_t const *responseBuffer, uint8_t *errorCode);
 
 extern void ep_can_tx_handler   (uint16_t len);
 extern void ep_gp_tx_handler    (uint16_t len);
 extern void ep_i2c_tx_handler   (uint16_t len);
 extern void ep_spi_tx_handler   (uint16_t len);
+
+
+
+
+
 
 int initUSB(void)
 {
@@ -83,8 +88,9 @@ void tud_cdc_rx_cb(uint8_t itf)
 
 void tud_vendor_rx_cb(uint8_t itf, uint8_t const* buffer, uint16_t bufsize)
 {
-    uint8_t     responseBuffer[512];
-    uint16_t    responseSize    = 0;
+    uint8_t responseBuffer[512];
+    int8_t  responseSize    = -1;
+    uint8_t errorCode       =  0;
     
     printf("RX Vendor on interface %d\n", itf);
     printf("Message: %s\n", buffer);
@@ -100,25 +106,25 @@ void tud_vendor_rx_cb(uint8_t itf, uint8_t const* buffer, uint16_t bufsize)
         {
             case ITF_NUM_CAN:
                 // process CAN data
-                ep_can_rx_handler(buffer, bufsize, responseBuffer, &responseSize);
+                responseSize = com_can_rx_commandStringHandler  (buffer, bufsize, responseBuffer, &errorCode);
     
             break;
     
             case ITF_NUM_GP:
                 // process General Purpose data
-                ep_gp_rx_handler (buffer, bufsize, responseBuffer, &responseSize);
+                responseSize = gpio_rx_commandStringHandler     (buffer, bufsize, responseBuffer, &errorCode);
     
             break;
     
             case ITF_NUM_I2C:
                 // process I2C data
-                ep_i2c_rx_handler(buffer, bufsize, responseBuffer, &responseSize);
+                responseSize = com_i2c_rx_commandStringHandler  (buffer, bufsize, responseBuffer, &errorCode);
     
             break;
     
             case ITF_NUM_SPI:
                 // process SPI data
-                ep_spi_rx_handler(buffer, bufsize, responseBuffer, &responseSize);
+                responseSize = com_spi_rx_commandStringHandler  (buffer, bufsize, responseBuffer, &errorCode);
     
             break;
     
@@ -128,9 +134,10 @@ void tud_vendor_rx_cb(uint8_t itf, uint8_t const* buffer, uint16_t bufsize)
         }
     }
     
+    if((0 != errorCode) || (0 > responseSize))
+    {
 
-
-    
+    }
 }
 
 void tud_vendor_tx_cb(uint8_t itf, uint32_t sent_bytes)

@@ -1,8 +1,14 @@
 #include "spiHandlers.h"
 #include "../devicePins/device_pins.h"
 #include <string.h>
+#include <pico/stdio.h>
 
-uint8_t com_spi_commandStringHandler (uint8_t *commandString,  uint8_t commandStringLength, uint8_t *responseBuffer, uint8_t *errorBuffer)
+void ep_spi_tx_handler(uint16_t len)
+{
+    
+}
+
+uint8_t com_spi_rx_commandStringHandler (uint8_t *commandString,  uint8_t commandStringLength, uint8_t *responseBuffer, uint8_t *errorBuffer)
 {
     uint8_t responseSize = 0u;
 

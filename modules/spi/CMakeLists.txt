@@ -1,6 +1,4 @@
 add_library(lib_spiIf
-    endpoint.h
-    endpoint.c
     spiHandlers.h
     spiHandlers.c
 )

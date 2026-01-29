@@ -1,6 +1,4 @@
 add_library(lib_i2cIf
-    endpoint.h
-    endpoint.c
     i2cHandlers.h
     i2cHandlers.c
 )
