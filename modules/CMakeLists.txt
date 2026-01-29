@@ -1,0 +1,7 @@
+add_subdirectory(devicePins)
+add_subdirectory(uart)
+add_subdirectory(spi)
+add_subdirectory(i2c)
+add_subdirectory(can)
+add_subdirectory(gp)
+add_subdirectory(usb)
