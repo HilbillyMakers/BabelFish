@@ -34,7 +34,7 @@ if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
         endif()
 endif()
 
-add_subdirectory(usb_interface)
+add_subdirectory(modules)
 
 add_executable(${PROJECT_NAME} main.c)
 
@@ -42,4 +42,9 @@ target_link_libraries(${PROJECT_NAME}
         pico_stdlib
         pico_time
         lib_usbIf
+        lib_canIf
+        lib_gpIf
+        lib_i2cIf
+        lib_spiIf
+        lib_uartIf
 )
