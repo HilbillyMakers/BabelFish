@@ -1,7 +1,4 @@
 add_library(lib_uartIf
-    endpoint.h
-    endpoint.c
-    uartHandlers.h
     uartHandlers.c
 )
 

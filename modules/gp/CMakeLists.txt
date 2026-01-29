@@ -1,5 +1,4 @@
 add_library(lib_gpIf
-    commandHandlers.h
     commandHandlers.c
 
     digitalHandlers/digitalHandlers.h

@@ -1,7 +1,4 @@
 add_library(lib_canIf
-    endpoint.h
-    endpoint.c
-    canHandlers.h
     canHandlers.c
 )
 
