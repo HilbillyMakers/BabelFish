@@ -148,7 +148,13 @@ uint8_t gpio_pwm_commandStringHandler (uint8_t *commandString,  uint8_t commandS
     return responseSize;
 }
 
-uint8_t gpio_pwm_initPin      (const uint8_t pinID, const bool pinDirection, uint8_t* const responseBuffer, uint8_t* const errorBuffer)
+///TODO:
+/* 
+    Extract log messages into python script
+    responseBuffer and responseSize should contain only raw data
+*/
+
+uint8_t gpio_pwm_initPin        (const uint8_t pinID, const bool pinDirection, uint8_t* const responseBuffer, uint8_t* const errorBuffer)
 {
 
     uint8_t     responseSize  = 0u;
@@ -237,7 +243,7 @@ uint8_t gpio_pwm_initPin      (const uint8_t pinID, const bool pinDirection, uin
     return responseSize;
 }
 
-uint8_t gpio_pwm_deinitPin    (const uint8_t pinID, uint8_t* const responseBuffer, uint8_t* const errorBuffer)
+uint8_t gpio_pwm_deinitPin      (const uint8_t pinID, uint8_t* const responseBuffer, uint8_t* const errorBuffer)
 {
     uint8_t responseSize = 0u;
 
@@ -270,7 +276,7 @@ uint8_t gpio_pwm_deinitPin    (const uint8_t pinID, uint8_t* const responseBuffe
     return responseSize;
 }
 
-uint8_t gpio_pwm_get_wrap(const uint8_t pinID, uint8_t* const responseBuffer, uint8_t* const errorBuffer)
+uint8_t gpio_pwm_get_wrap       (const uint8_t pinID, uint8_t* const responseBuffer, uint8_t* const errorBuffer)
 {
     const uint8_t slice_num     = pwm_gpio_to_slice_num (pinID);
           uint8_t responseSize  = 0u;
@@ -300,7 +306,7 @@ uint8_t gpio_pwm_get_wrap(const uint8_t pinID, uint8_t* const responseBuffer, ui
     return responseSize;
 }
 
-uint8_t gpio_pwm_set_wrap     (const uint8_t pinID, const uint16_t wrapSize, uint8_t* const responseBuffer, uint8_t* const errorBuffer)
+uint8_t gpio_pwm_set_wrap       (const uint8_t pinID, const uint16_t wrapSize, uint8_t* const responseBuffer, uint8_t* const errorBuffer)
 {
     const uint8_t slice_num     = pwm_gpio_to_slice_num (pinID);
           uint8_t responseSize  = 0u;
@@ -330,7 +336,7 @@ uint8_t gpio_pwm_set_wrap     (const uint8_t pinID, const uint16_t wrapSize, uin
     return responseSize;
 }
 
-uint8_t gpio_pwm_get_dutyCycle(const uint8_t pinID, uint8_t* const responseBuffer, uint8_t* const errorBuffer)
+uint8_t gpio_pwm_get_dutyCycle  (const uint8_t pinID, uint8_t* const responseBuffer, uint8_t* const errorBuffer)
 {
           uint8_t   responseSize    = 0u;
     const bool      channel         = (pinID & 0b1u);
@@ -362,7 +368,7 @@ uint8_t gpio_pwm_get_dutyCycle(const uint8_t pinID, uint8_t* const responseBuffe
     return responseSize;
 }
   
-uint8_t gpio_pwm_set_dutyCycle(const uint8_t pinID, const uint16_t dutyCycle, uint8_t* const responseBuffer, uint8_t* const errorBuffer)
+uint8_t gpio_pwm_set_dutyCycle  (const uint8_t pinID, const uint16_t dutyCycle, uint8_t* const responseBuffer, uint8_t* const errorBuffer)
 {
           uint8_t   responseSize    = 0u;
     const uint8_t   slice_num       = pwm_gpio_to_slice_num(pinID);
@@ -395,7 +401,7 @@ uint8_t gpio_pwm_set_dutyCycle(const uint8_t pinID, const uint16_t dutyCycle, ui
     return responseSize;
 }
 
-uint8_t gpio_pwm_get_frequency(const uint8_t pinID, uint8_t* const responseBuffer, uint8_t* const errorBuffer)
+uint8_t gpio_pwm_get_frequency  (const uint8_t pinID, uint8_t* const responseBuffer, uint8_t* const errorBuffer)
 {
     uint8_t responseSize    = 0u;
     uint8_t slice_num       = pwm_gpio_to_slice_num (pinID);
@@ -422,7 +428,7 @@ uint8_t gpio_pwm_get_frequency(const uint8_t pinID, uint8_t* const responseBuffe
     return responseSize;
 }
 
-uint8_t gpio_pwm_set_frequency(const uint8_t pinID, const uint16_t frequency, uint8_t* const responseBuffer, uint8_t* const errorBuffer)
+uint8_t gpio_pwm_set_frequency  (const uint8_t pinID, const uint16_t frequency, uint8_t* const responseBuffer, uint8_t* const errorBuffer)
 {
           uint8_t responseSize    = 0u;
     const uint8_t slice_num       = pwm_gpio_to_slice_num (pinID);
