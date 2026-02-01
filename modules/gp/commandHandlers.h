@@ -13,9 +13,9 @@ enum gpio_CommandType
 
 enum gpio_ErrorType
 {
-    E_OK,
+    E_GPIO_OK,
 
-    E_UNKNOWN,
+    E_GPIO_UNKNOWN,
 };
 
 uint8_t gpio_commandStringHandler        (uint8_t *commandString,  uint8_t  commandStringLength,

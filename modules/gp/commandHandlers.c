@@ -11,7 +11,7 @@ uint8_t gpio_commandStringHandler         (uint8_t *commandString,  uint8_t comm
     uint8_t commandType     = 0u;
     uint8_t response_size   = 0u;
     
-    *errorBuffer    = E_UNKNOWN;
+    *errorBuffer    = E_GPIO_UNKNOWN;
     commandType     = commandString[0];
 
     switch(commandType)
