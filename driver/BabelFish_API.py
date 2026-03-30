@@ -447,7 +447,7 @@ def transfer_SPI_data(transferMessage, rxSize):
     global ENDPOINT_SPI_OUT
     global ENDPOINT_SPI_IN
 
-    command_string = BFD.SPI_TRANSFER_DATA + chr(len(transferMessage)) + chr(rxSize) + chr(transferMessage)
+    command_string = BFD.SPI_TRANSFER_DATA + chr(len(transferMessage)) + chr(rxSize) + transferMessage
 
     return write_command(ENDPOINT_SPI_OUT, ENDPOINT_SPI_IN, command_string, "Transfer SPI Data")
 
