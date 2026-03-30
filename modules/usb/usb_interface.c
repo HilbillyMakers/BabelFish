@@ -11,7 +11,7 @@ extern void ep_can_rx_handler   (uint8_t const *buf, uint16_t len, uint8_t const
 extern void ep_gp_rx_handler    (uint8_t const *buf, uint16_t len, uint8_t const *responseBuffer, uint16_t *responseSize);
 extern void ep_i2c_rx_handler   (uint8_t const *buf, uint16_t len, uint8_t const *responseBuffer, uint16_t *responseSize);
 
-extern uint8_t com_spi_commandStringHandler (uint8_t *commandString,  uint8_t commandStringLength, uint8_t *responseBuffer, uint8_t *errorBuffer);
+extern uint8_t com_spi_commandStringHandler (uint8_t *commandString, uint8_t commandStringLength, uint8_t *responseBuffer, uint8_t *errorBuffer);
 extern uint8_t com_i2c_commandStringHandler (const uint8_t *commandString,  uint8_t commandStringLength, uint8_t *responseBuffer, uint8_t *errorBuffer);
 
 // extern void ep_can_tx_handler   (uint16_t len);

@@ -47,7 +47,7 @@ uint8_t com_spi_deinit      (                               uint8_t* const respo
 uint8_t com_spi_transfer    (uint8_t* const hostMessage,    uint8_t* const responseBuffer, uint8_t* const errorBuffer);
 
 
-uint8_t com_spi_commandStringHandler (const uint8_t *commandString,  uint8_t commandStringLength, uint8_t *responseBuffer, uint8_t *errorBuffer)
+uint8_t com_spi_commandStringHandler (const uint8_t *commandString, uint8_t commandStringLength, uint8_t *responseBuffer, uint8_t *errorBuffer)
 {
     uint8_t     command         =   commandString[0];
     uint8_t     responseSize    =   0u;
@@ -70,7 +70,7 @@ uint8_t com_spi_commandStringHandler (const uint8_t *commandString,  uint8_t com
     return responseSize;
 }
 
-uint8_t com_spi_init        (uint8_t* const configuration, uint8_t* const responseBuffer, uint8_t* const errorBuffer)
+uint8_t com_spi_init        (uint8_t* const configuration,  uint8_t* const responseBuffer, uint8_t* const errorBuffer)
 {
 
     uint32_t baudRate               =   0u;

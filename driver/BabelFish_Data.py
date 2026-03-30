@@ -55,10 +55,7 @@ PWM_DIRECTION_IN              = chr(1)
 """ SPI Commands """
 SPI_INIT_BUS                  = chr(0)
 SPI_DEINIT_BUS                = chr(1)
-SPI_SET_BAUDRATE              = chr(2)
-SPI_GET_BAUDRATE              = chr(3)
-SPI_WRITE_DATA                = chr(4)
-SPI_READ_DATA                 = chr(5)
+SPI_TRANSFER_DATA             = chr(2)
 
 """ I2C Commands """
 I2C_INIT_BUS                  = chr(0)
