@@ -130,15 +130,19 @@ MCP2515_Error MCP2515_reset(MCP2515_instance *instance)
 
     // receives all valid messages using either Standard or Extended Identifiers that
     // meet filter criteria. RXF0 is applied for RXB0, RXF1 is applied for RXB1
-    modifyRegister  (instance, MCP_RXB0CTRL,
-                        (RXBnCTRL_RXM_MASK   | RXB0CTRL_BUKT | RXB0CTRL_FILHIT_MASK),
-                        (RXBnCTRL_RXM_STDEXT | RXB0CTRL_BUKT | RXB0CTRL_FILHIT)
-                );
+    modifyRegister  (
+        instance, 
+        MCP_RXB0CTRL,
+        (RXBnCTRL_RXM_MASK   | RXB0CTRL_BUKT | RXB0CTRL_FILHIT_MASK),
+        (RXBnCTRL_RXM_STDEXT | RXB0CTRL_BUKT | RXB0CTRL_FILHIT)
+    );
 
-    modifyRegister  (instance, MCP_RXB1CTRL,
-                        (RXBnCTRL_RXM_MASK   | RXB1CTRL_FILHIT_MASK),
-                        (RXBnCTRL_RXM_STDEXT | RXB1CTRL_FILHIT)
-                );
+    modifyRegister  (
+        instance, 
+        MCP_RXB1CTRL,
+        (RXBnCTRL_RXM_MASK   | RXB1CTRL_FILHIT_MASK),
+        (RXBnCTRL_RXM_STDEXT | RXB1CTRL_FILHIT)
+    );
 
     // clear filters and masks
     // do not filter any standard frames for RXF0 used by RXB0
@@ -156,7 +160,8 @@ MCP2515_Error MCP2515_reset(MCP2515_instance *instance)
     for (int i = 0; i < 2; ++i) 
     {
         MCP2515_Error result = MCP2515_setFilterMask(instance, masks[i], true, 0);
-        if (result != MCP2515_E_OK) {
+        if (result != MCP2515_E_OK) 
+        {
             return result;
         }
     }

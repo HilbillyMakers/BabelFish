@@ -2,6 +2,13 @@
 #include "../devicePins/device_pins.h"
 #include <string.h>
 
+/* CAN API proposals
+    # Send full frame [frame_ID] [frame_data]
+    # Read single frame [frame_ID]
+    # Read Signal [frame_ID] [Signal_Name] [Start_Bit] [Length]
+    
+*/
+
 uint8_t com_can_commandStringHandler (uint8_t *commandString,  uint8_t commandStringLength, uint8_t *responseBuffer, uint8_t *errorBuffer)
 {
     uint8_t responseSize = 0;
