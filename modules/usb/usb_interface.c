@@ -10,12 +10,26 @@
 extern void ep_can_rx_handler   (uint8_t const *buf, uint16_t len, uint8_t const *responseBuffer, uint16_t *responseSize);
 extern void ep_gp_rx_handler    (uint8_t const *buf, uint16_t len, uint8_t const *responseBuffer, uint16_t *responseSize);
 extern void ep_i2c_rx_handler   (uint8_t const *buf, uint16_t len, uint8_t const *responseBuffer, uint16_t *responseSize);
-extern void ep_spi_rx_handler   (uint8_t const *buf, uint16_t len, uint8_t const *responseBuffer, uint16_t *responseSize);
 
-extern void ep_can_tx_handler   (uint16_t len);
-extern void ep_gp_tx_handler    (uint16_t len);
-extern void ep_i2c_tx_handler   (uint16_t len);
-extern void ep_spi_tx_handler   (uint16_t len);
+extern uint8_t com_spi_commandStringHandler (uint8_t *commandString,  uint8_t commandStringLength, uint8_t *responseBuffer, uint8_t *errorBuffer);
+
+// extern void ep_can_tx_handler   (uint16_t len);
+// extern void ep_gp_tx_handler    (uint16_t len);
+// extern void ep_i2c_tx_handler   (uint16_t len);
+// extern void ep_spi_tx_handler   (uint16_t len);
+
+enum
+{
+    ITF_IDX_CAN,
+    ITF_IDX_GP,
+    ITF_IDX_I2C,
+    ITF_IDX_SPI,
+
+    ITF_IDX_NUM
+};
+bool multi_packet = false;
+uint8_t can_rx_buffer[512];
+uint8_t can_rx_buffer_index;
 
 int initUSB(void)
 {
@@ -24,21 +38,15 @@ int initUSB(void)
     tusb_init();
 
     // TinyUSB board init callback after init
-    if (board_init_after_tusb) 
-    {
-        board_init_after_tusb();
-    }
+    board_init_after_tusb();
 
     stdio_init_all();
-
+    printf("Device started\n");
     return 0;
 }
 
 int runUSBLoop(void)
 {
-    // let pico sdk use the first cdc interface for std io
-    stdio_init_all();
-
     // main run loop
     while (1) 
     {
@@ -51,6 +59,39 @@ int runUSBLoop(void)
 
     // indicate no error
     return 0;
+}
+
+
+void tud_vendor_rx_cb(uint8_t idx, const uint8_t *buffer, uint32_t bufsize)
+{
+    uint8_t response_size;
+    uint8_t response[64];
+    uint8_t error_buffer;
+
+    switch (idx)
+    {
+        case ITF_IDX_CAN:
+            tud_vendor_n_write      (idx, buffer, bufsize);
+
+        break;
+            
+        case ITF_IDX_GP:
+            tud_vendor_n_write      (idx, buffer, bufsize);
+        break;
+        
+        case ITF_IDX_I2C:
+        
+        break;
+        
+        case ITF_IDX_SPI:
+            response_size = com_spi_commandStringHandler (buffer, bufsize, response, &error_buffer);
+
+        break;
+        
+        default:
+        
+        break;
+    }
 }
 
 // callback when data is received on a CDC interface
@@ -81,90 +122,7 @@ void tud_cdc_rx_cb(uint8_t itf)
     }
 }
 
-void tud_vendor_rx_cb(uint8_t itf, uint8_t const* buffer, uint16_t bufsize)
-{
-    uint8_t     responseBuffer[512];
-    uint16_t    responseSize    = 0;
-    
-    printf("RX Vendor on interface %d\n", itf);
-    printf("Message: %s\n", buffer);
-
-    if(false == tud_vendor_n_available(itf))
-    {
-        // no data available
-        
-    }
-    else
-    {
-        switch(itf)
-        {
-            case ITF_NUM_CAN:
-                // process CAN data
-                ep_can_rx_handler(buffer, bufsize, responseBuffer, &responseSize);
-    
-            break;
-    
-            case ITF_NUM_GP:
-                // process General Purpose data
-                ep_gp_rx_handler (buffer, bufsize, responseBuffer, &responseSize);
-    
-            break;
-    
-            case ITF_NUM_I2C:
-                // process I2C data
-                ep_i2c_rx_handler(buffer, bufsize, responseBuffer, &responseSize);
-    
-            break;
-    
-            case ITF_NUM_SPI:
-                // process SPI data
-                ep_spi_rx_handler(buffer, bufsize, responseBuffer, &responseSize);
-    
-            break;
-    
-            default:
-                // unknown interface
-            break;
-        }
-    }
-    
-
-
-    
-}
-
 void tud_vendor_tx_cb(uint8_t itf, uint32_t sent_bytes)
 {
-    printf("TX Vendor on interface %d\n", itf);
-
-    switch(itf)
-    {
-        case ITF_NUM_CAN:
-            // process CAN data
-            ep_can_tx_handler(sent_bytes);
-
-        break;
-
-        case ITF_NUM_GP:
-            // process General Purpose data
-            ep_gp_tx_handler(sent_bytes);
-
-        break;
-
-        case ITF_NUM_I2C:
-            // process I2C data
-            ep_i2c_tx_handler(sent_bytes);
-
-        break;
-
-        case ITF_NUM_SPI:
-            // process SPI data
-            ep_spi_tx_handler(sent_bytes);
-
-        break;
-
-        default:
-            // unknown interface
-        break;
-    }
+    return;
 }

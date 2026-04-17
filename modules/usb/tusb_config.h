@@ -29,10 +29,10 @@
 
 // Enable 4 vendor classes
 #define CFG_TUD_VENDOR          (4)
-// Set vendor FIFO buffer sizes
-#define CFG_TUD_VENDOR_RX_BUFSIZE  (64)
-#define CFG_TUD_VENDOR_TX_BUFSIZE  (64)
-#define CFG_TUD_VENDOR_EP_BUFSIZE  (64)
+// Set vendor FIFO buffer sizes to 0, in order to avoid buffering issues
+#define CFG_TUD_VENDOR_RX_BUFSIZE  (0)
+#define CFG_TUD_VENDOR_TX_BUFSIZE  (0)
+#define CFG_TUD_VENDOR_EP_BUFSIZE  (0)
 
 #ifndef CFG_TUD_ENDPOINT0_SIZE
 #define CFG_TUD_ENDPOINT0_SIZE  (64)
