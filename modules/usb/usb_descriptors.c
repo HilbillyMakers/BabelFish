@@ -180,7 +180,8 @@ uint16_t const *tud_descriptor_string_cb            (uint8_t index, uint16_t lan
             // Windows wants utf16le
 
             // Determine which string descriptor to return
-            if ( !(index < sizeof(string_desc_arr) / sizeof(string_desc_arr[0])) ) {
+            if ( !(index < sizeof(string_desc_arr) / sizeof(string_desc_arr[0])) ) 
+            {
                 return NULL;
             }
 
@@ -190,12 +191,14 @@ uint16_t const *tud_descriptor_string_cb            (uint8_t index, uint16_t lan
             char_count = strlen(str);
             size_t const max_count = sizeof(_desc_str) / sizeof(_desc_str[0]) - 1; // -1 for string type
             // Cap at max char
-            if (char_count > max_count) {
+            if (char_count > max_count) 
+            {
                 char_count = max_count;
             }
 
             // Convert ASCII string into UTF-16
-            for (size_t i = 0; i < char_count; i++) {
+            for (size_t i = 0; i < char_count; i++) 
+            {
                 _desc_str[1 + i] = str[i];
             }
             break;

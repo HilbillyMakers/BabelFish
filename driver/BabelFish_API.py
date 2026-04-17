@@ -117,6 +117,46 @@ def initBabelFish():
     assert ENDPOINT_SPI_OUT                is not None
     assert ENDPOINT_SPI_IN                 is not None
 
+
+""" Send raw data """
+def send_data(interface, message):
+    global INTERFACE_UART_CDC_NOTIFICATION
+    global INTERFACE_UART_CDC_DATA        
+    global INTERFACE_GP                   
+    global INTERFACE_CAN                  
+    global INTERFACE_I2C                  
+    global INTERFACE_SPI                  
+    global ENDPOINT_UART_CDC_NOTIFICATION 
+    global ENDPOINT_UART_CDC_OUT          
+    global ENDPOINT_UART_CDC_IN           
+    global ENDPOINT_GP_OUT                
+    global ENDPOINT_GP_IN                 
+    global ENDPOINT_CAN_OUT               
+    global ENDPOINT_CAN_IN                
+    global ENDPOINT_I2C_OUT               
+    global ENDPOINT_I2C_IN                
+    global ENDPOINT_SPI_OUT               
+    global ENDPOINT_SPI_IN  
+
+    if interface == INTERFACE_GP:
+        ENDPOINT_GP_OUT.write(message)
+        response = ENDPOINT_GP_IN.read(64)
+    elif interface == INTERFACE_CAN:
+        ENDPOINT_CAN_OUT.write(message)
+        response = ENDPOINT_CAN_IN.read(64)
+    elif interface == INTERFACE_I2C:
+        ENDPOINT_I2C_OUT.write(message)
+        response = ENDPOINT_I2C_IN.read(64)
+    elif interface == INTERFACE_SPI:
+        ENDPOINT_SPI_OUT.write(message)
+        response = ENDPOINT_SPI_IN.read(64)
+    else:
+        print("unknown interface")
+        return
+
+    print("Response: {}".format(''.join([chr(x) for x in response])))
+
+
 """ Digital Functions """
 def init_DigitalPin_Output(pinID):
     global INTERFACE_GP

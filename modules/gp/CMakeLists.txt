@@ -1,7 +1,4 @@
 add_library(lib_gpIf
-    endpoint.h
-    endpoint.c
-
     commandHandlers.h
     commandHandlers.c
 
