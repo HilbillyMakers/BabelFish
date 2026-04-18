@@ -9,6 +9,6 @@ target_link_libraries(lib_i2cIf PRIVATE
     pico_stdlib 
     hardware_resets 
     hardware_irq
-    hardware_pwm
+    hardware_i2c
     lib_pinConfigs
 )

@@ -62,6 +62,17 @@ typedef struct
   unsigned short pinInitialized;
 } pinConfig;
 
+enum
+{
+    E_I2C_NOT_SENT,
+    E_I2C_NOTHING_TO_SEND,
+    E_I2C_NOT_RECEIVED,
+    E_I2C_EMPTY_MESSAGE,
+    E_I2C_GENERIC,
+};
+
+
+
 extern pinConfig pinConfigs[PIN_NUMBER];
 
 #endif
