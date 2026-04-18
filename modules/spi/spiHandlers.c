@@ -2,7 +2,7 @@
 #include "../devicePins/device_pins.h"
 #include <string.h>
 
-uint8_t com_spi_commandStringHandler (uint8_t *commandString,  uint8_t commandStringLength, uint8_t *responseBuffer, uint8_t *errorBuffer)
+uint8_t com_spi_commandStringHandler (const uint8_t *commandString,  uint8_t commandStringLength, uint8_t *responseBuffer, uint8_t *errorBuffer)
 {
     uint8_t responseSize = 0u;
 
