@@ -82,7 +82,7 @@ void tud_vendor_rx_cb(uint8_t idx, const uint8_t *buffer, uint32_t bufsize)
             
         case ITF_IDX_I2C:
             response_size = com_i2c_commandStringHandler (buffer, bufsize, response, &error_buffer);
-            tud_vendor_n_write      (idx, buffer, bufsize);
+            tud_vendor_n_write(idx, response, response_size);
         
         break;
         

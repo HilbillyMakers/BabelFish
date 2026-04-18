@@ -5,3 +5,5 @@ import BabelFish_Data as BFD
 
 BF.initBabelFish()
 BF.send_data(BF.INTERFACE_CAN, "test")
+
+BF.info_I2C()

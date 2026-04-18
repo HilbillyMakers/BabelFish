@@ -1,6 +1,7 @@
 #include "i2cHandlers.h"
 #include "../devicePins/device_pins.h"
 #include <string.h>
+#include <stdio.h>
 #include "hardware/i2c.h"
 
 #define PROTOTYPE_I2C       i2c0
@@ -13,8 +14,12 @@ enum
 {
     I2C_INIT,
     I2C_DEINIT,
-    I2C_READ,
-    I2C_WRITE,
+    I2C_SET_BAUDRATE,
+    I2C_GET_BAUDRATE,
+    I2C_WRITE_DATA,
+    I2C_READ_DATA,
+    I2C_SCAN_BUS,
+    I2C_INFO,
 };
 
 typedef enum
@@ -37,18 +42,22 @@ uint8_t com_i2c_commandStringHandler (const uint8_t *commandString,  uint8_t com
     switch(command)
     {
         case I2C_INIT:
-            responseSize    = com_i2c_init      (&commandString[1],  responseBuffer, errorBuffer);
+            responseSize    = com_i2c_init      (&commandString[1], responseBuffer, errorBuffer);
         break;
 
         case I2C_DEINIT:
-            responseSize    = com_i2c_deinit    (                    responseBuffer, errorBuffer);
+            responseSize    = com_i2c_deinit    (                   responseBuffer, errorBuffer);
         break;
 
-        case I2C_READ:
-            responseSize    = com_i2c_read      (&commandString[1],  responseBuffer, errorBuffer);
+        case I2C_READ_DATA:
+            responseSize    = com_i2c_read      (&commandString[1], responseBuffer, errorBuffer);
         
-        case I2C_WRITE:
-            responseSize    = com_i2c_write     (&commandString[1],  responseBuffer, errorBuffer);
+        case I2C_WRITE_DATA:
+            responseSize    = com_i2c_write     (&commandString[1], responseBuffer, errorBuffer);
+        break;
+        
+        case I2C_INFO:
+            responseSize    = com_i2c_info      (                   responseBuffer, errorBuffer);
         break;
     }
 
@@ -134,7 +143,12 @@ uint8_t com_i2c_write        (const uint8_t* hostMessage,    uint8_t* const resp
     return sentBytes;
 }
 
-uint8_t com_i2c_info     (uint8_t* const responseBuffer, uint8_t* const errorBuffer)
+uint8_t com_i2c_info   (uint8_t* const responseBuffer, uint8_t* const errorBuffer)
 {
-    
+    char constantResponseBuffer[]   = "I2C port version 0.1";
+    uint8_t responseSize            = sizeof(constantResponseBuffer) / sizeof(char);
+    snprintf((char*)responseBuffer, responseSize, "%s", constantResponseBuffer);
+    *errorBuffer                    = E_I2C_OK;
+
+    return responseSize;
 }
