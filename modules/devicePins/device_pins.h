@@ -3,6 +3,13 @@
 
 #define PIN_NUMBER 29
 
+enum ErrorType
+{
+    E_OK,
+
+    E_UNKNOWN,
+};
+
 enum PinFunction
 {
     PIN_FUNCTION_NONE       = 0u,

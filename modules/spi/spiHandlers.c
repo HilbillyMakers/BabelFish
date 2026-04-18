@@ -1,5 +1,5 @@
-#include "spiHandlers.h"
 #include <string.h>
+#include <pico/stdlib.h>
 
 uint8_t com_spi_commandStringHandler (const uint8_t *commandString,  uint8_t commandStringLength, uint8_t *responseBuffer, uint8_t *errorBuffer)
 {

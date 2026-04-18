@@ -1,8 +1,8 @@
-#include "i2cHandlers.h"
 #include "../devicePins/device_pins.h"
 #include <string.h>
 #include <stdio.h>
 #include "hardware/i2c.h"
+#include <pico/stdlib.h>
 
 #define PROTOTYPE_I2C       i2c0
 
