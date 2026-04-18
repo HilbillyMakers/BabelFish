@@ -389,9 +389,24 @@ def scan_I2C():
     print("Message " + command_string + " sent successfully")
     
     response = ENDPOINT_I2C_IN.read(64)
-    response = ENDPOINT_I2C_IN.read
 
     print("Scan_I2C response: {}".format(''.join([chr(x) for x in response])))
+
+    return response
+
+def info_I2C():
+    global INTERFACE_I2C
+    global ENDPOINT_I2C_OUT
+    global ENDPOINT_I2C_IN
+
+    command_string = BFD.I2C_INFO
+    
+    ENDPOINT_I2C_OUT.write(command_string)
+    print("Message " + command_string + " sent successfully")
+    
+    response = ENDPOINT_I2C_IN.read(64)
+
+    print("info_I2C response: {}".format(''.join([chr(x) for x in response])))
 
     return response
 

@@ -1,6 +1,7 @@
 #include "i2cHandlers.h"
 #include "../devicePins/device_pins.h"
 #include <string.h>
+#include <stdio.h>
 #include "hardware/i2c.h"
 
 #define PROTOTYPE_I2C       i2c0
@@ -13,8 +14,12 @@ enum
 {
     I2C_INIT,
     I2C_DEINIT,
-    I2C_READ,
-    I2C_WRITE,
+    I2C_SET_BAUDRATE,
+    I2C_GET_BAUDRATE,
+    I2C_WRITE_DATA,
+    I2C_READ_DATA,
+    I2C_SCAN_BUS,
+    I2C_INFO,
 };
 
 typedef enum
@@ -23,12 +28,13 @@ typedef enum
     I2C_SLAVE_MODE
 } i2c_mode_e;
 
-static inline int8_t com_i2c_init     (uint8_t* const configuration,  uint8_t* const responseBuffer, uint8_t* const errorBuffer);
-static inline int8_t com_i2c_deinit   (                               uint8_t* const responseBuffer, uint8_t* const errorBuffer);
-static inline int8_t com_i2c_write    (uint8_t* const hostMessage,    uint8_t* const responseBuffer, uint8_t* const errorBuffer);
-static inline int8_t com_i2c_read     (uint8_t* const hostMessage,    uint8_t* const responseBuffer, uint8_t* const errorBuffer);
+static inline uint8_t com_i2c_init     (const uint8_t* configuration,  uint8_t* const responseBuffer, uint8_t* const errorBuffer);
+static inline uint8_t com_i2c_deinit   (                               uint8_t* const responseBuffer, uint8_t* const errorBuffer);
+static inline uint8_t com_i2c_write    (const uint8_t* hostMessage,    uint8_t* const responseBuffer, uint8_t* const errorBuffer);
+static inline uint8_t com_i2c_read     (const uint8_t* hostMessage,    uint8_t* const responseBuffer, uint8_t* const errorBuffer);
+static inline uint8_t com_i2c_info     (                               uint8_t* const responseBuffer, uint8_t* const errorBuffer);
 
-int8_t com_i2c_commandStringHandler (uint8_t *commandString,  uint8_t commandStringLength, uint8_t *responseBuffer, uint8_t *errorBuffer)
+uint8_t com_i2c_commandStringHandler (const uint8_t *commandString,  uint8_t commandStringLength, uint8_t *responseBuffer, uint8_t *errorBuffer)
 {
     uint8_t     command         =   commandString[0];
     uint8_t     responseSize    =   0u;
@@ -36,25 +42,29 @@ int8_t com_i2c_commandStringHandler (uint8_t *commandString,  uint8_t commandStr
     switch(command)
     {
         case I2C_INIT:
-            responseSize    = com_i2c_init      (&commandString[1],  responseBuffer, errorBuffer);
+            responseSize    = com_i2c_init      (&commandString[1], responseBuffer, errorBuffer);
         break;
 
         case I2C_DEINIT:
-            responseSize    = com_i2c_deinit    (                    responseBuffer, errorBuffer);
+            responseSize    = com_i2c_deinit    (                   responseBuffer, errorBuffer);
         break;
 
-        case I2C_READ:
-            responseSize    = com_i2c_read      (&commandString[1],  responseBuffer, errorBuffer);
+        case I2C_READ_DATA:
+            responseSize    = com_i2c_read      (&commandString[1], responseBuffer, errorBuffer);
         
-        case I2C_WRITE:
-            responseSize    = com_i2c_write     (&commandString[1],  responseBuffer, errorBuffer);
+        case I2C_WRITE_DATA:
+            responseSize    = com_i2c_write     (&commandString[1], responseBuffer, errorBuffer);
+        break;
+        
+        case I2C_INFO:
+            responseSize    = com_i2c_info      (                   responseBuffer, errorBuffer);
         break;
     }
 
     return responseSize;
 }
 
-int8_t com_i2c_init        (uint8_t* const configuration, uint8_t* const responseBuffer, uint8_t* const errorBuffer)
+uint8_t com_i2c_init        (const uint8_t* configuration, uint8_t* const responseBuffer, uint8_t* const errorBuffer)
 {
     i2c_mode_e  i2c_mode                = I2C_MASTER_MODE;
     uint32_t    baudRate                = 0u;
@@ -80,14 +90,14 @@ int8_t com_i2c_init        (uint8_t* const configuration, uint8_t* const respons
     return sizeof(physicalBaudRate);
 }
 
-int8_t com_i2c_deinit      (uint8_t* const responseBuffer, uint8_t* const errorBuffer)
+uint8_t com_i2c_deinit      (uint8_t* const responseBuffer, uint8_t* const errorBuffer)
 {
     i2c_deinit(PROTOTYPE_I2C);
 
     return 0;
 }
 
-int8_t com_i2c_read        (uint8_t* const hostMessage,    uint8_t* const responseBuffer, uint8_t* const errorBuffer)
+uint8_t com_i2c_read        (const uint8_t* hostMessage,    uint8_t* const responseBuffer, uint8_t* const errorBuffer)
 {
     uint8_t     address         =  hostMessage[0];
     uint8_t     messageSize     =  hostMessage[1];
@@ -109,12 +119,12 @@ int8_t com_i2c_read        (uint8_t* const hostMessage,    uint8_t* const respon
     return receivedBytes;
 }
 
-int8_t com_i2c_write        (uint8_t* const hostMessage,    uint8_t* const responseBuffer, uint8_t* const errorBuffer)
+uint8_t com_i2c_write        (const uint8_t* hostMessage,    uint8_t* const responseBuffer, uint8_t* const errorBuffer)
 {
-    uint8_t     address     =  hostMessage[0];
-    uint8_t     messageSize =  hostMessage[1];
-    uint8_t*    message     = &hostMessage[2];
-    int8_t      sentBytes   =  0u;
+    const uint8_t   address     =  hostMessage[0];
+    const uint8_t   messageSize =  hostMessage[1];
+    const uint8_t*  message     = &hostMessage[2];
+    int8_t          sentBytes   =  0u;
 
     if(!messageSize)
     {
@@ -131,4 +141,14 @@ int8_t com_i2c_write        (uint8_t* const hostMessage,    uint8_t* const respo
     }
 
     return sentBytes;
+}
+
+uint8_t com_i2c_info   (uint8_t* const responseBuffer, uint8_t* const errorBuffer)
+{
+    char constantResponseBuffer[]   = "I2C port version 0.1";
+    uint8_t responseSize            = sizeof(constantResponseBuffer) / sizeof(char);
+    snprintf((char*)responseBuffer, responseSize, "%s", constantResponseBuffer);
+    *errorBuffer                    = E_I2C_OK;
+
+    return responseSize;
 }

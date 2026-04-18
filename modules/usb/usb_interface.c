@@ -12,6 +12,7 @@ extern void ep_gp_rx_handler    (uint8_t const *buf, uint16_t len, uint8_t const
 extern void ep_i2c_rx_handler   (uint8_t const *buf, uint16_t len, uint8_t const *responseBuffer, uint16_t *responseSize);
 
 extern uint8_t com_spi_commandStringHandler (uint8_t *commandString,  uint8_t commandStringLength, uint8_t *responseBuffer, uint8_t *errorBuffer);
+extern uint8_t com_i2c_commandStringHandler (const uint8_t *commandString,  uint8_t commandStringLength, uint8_t *responseBuffer, uint8_t *errorBuffer);
 
 // extern void ep_can_tx_handler   (uint16_t len);
 // extern void ep_gp_tx_handler    (uint16_t len);
@@ -78,8 +79,10 @@ void tud_vendor_rx_cb(uint8_t idx, const uint8_t *buffer, uint32_t bufsize)
         case ITF_IDX_GP:
             tud_vendor_n_write      (idx, buffer, bufsize);
         break;
-        
+            
         case ITF_IDX_I2C:
+            response_size = com_i2c_commandStringHandler (buffer, bufsize, response, &error_buffer);
+            tud_vendor_n_write(idx, response, response_size);
         
         break;
         
@@ -122,7 +125,7 @@ void tud_cdc_rx_cb(uint8_t itf)
     }
 }
 
-void tud_vendor_tx_cb(uint8_t itf, uint32_t sent_bytes)
-{
-    return;
-}
+// void tud_vendor_tx_cb(uint8_t itf, uint32_t sent_bytes)
+// {
+//     return;
+// }

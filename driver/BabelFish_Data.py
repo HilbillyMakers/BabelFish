@@ -68,6 +68,7 @@ I2C_GET_BAUDRATE              = chr(3)
 I2C_WRITE_DATA                = chr(4)
 I2C_READ_DATA                 = chr(5)
 I2C_SCAN_BUS                  = chr(6)
+I2C_INFO                      = chr(7)
 
 """ CAN Commands """
 CAN_INIT_BUS                  = chr(0)
