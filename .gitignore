@@ -1,1 +1,4 @@
 build/
+__pycache__/BabelFish_API.cpython-312.pyc
+driver/__pycache__/BabelFish_API.cpython-312.pyc
+driver/__pycache__/BabelFish_Data.cpython-312.pyc
