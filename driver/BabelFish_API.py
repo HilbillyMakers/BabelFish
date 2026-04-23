@@ -418,10 +418,10 @@ def info_I2C():
     global ENDPOINT_I2C_OUT
     global ENDPOINT_I2C_IN
 
-    command_string = BFD.I2C_INFO
+    command_string = [BFD.I2C_INFO]
     
     ENDPOINT_I2C_OUT.write(command_string)
-    print("Message " + command_string + " sent successfully")
+    print("I2c Info Request sent")
     
     response = ENDPOINT_I2C_IN.read(64)
 
