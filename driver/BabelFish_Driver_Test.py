@@ -6,7 +6,7 @@ import BabelFish_Data as BFD
 BF.initBabelFish()
 BF.send_data(BF.INTERFACE_CAN, "test")
 
-# BF.info_I2C()
+BF.info_I2C()
 
 # SPI function test
 spi_init_response = BF.init_SPI     (115200)

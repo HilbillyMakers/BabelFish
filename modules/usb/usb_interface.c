@@ -63,7 +63,7 @@ int runUSBLoop(void)
 }
 
 
-void tud_vendor_rx_cb(uint8_t idx, const uint8_t *buffer, uint16_t bufsize)
+void tud_vendor_rx_cb(uint8_t idx, const uint8_t *buffer, uint32_t bufsize)
 {
     uint8_t response_size;
     uint8_t response[64];
