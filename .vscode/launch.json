@@ -1,6 +1,7 @@
 {
     "version": "0.2.0",
     "configurations": [
+
         {
             "name": "Pico Debug",
             "cwd": "${workspaceRoot}",
@@ -11,12 +12,20 @@
             // This may need to be "arm-none-eabi-gdb" for some previous builds
             "gdbPath" : "gdb-multiarch",
             "device": "RP2040",
+            // These commands are required to overwrite the port 50001 usage errors.
+            // The   rp2040 is dual core and each core listens to a separate port
+            // i.e.  50000 and 50001
+            "openOCDLaunchCommands": [
+                "tcl_port    50002",
+                "telnet_port 50003",
+                "adapter speed 5000"
+            ],
             "configFiles": [
                 // This may need to be "interface/picoprobe.cfg" for some previous builds
                 "interface/cmsis-dap.cfg",
                 "target/rp2040.cfg"
             ],
-            "svdFile": "${env:PICO_SDK_PATH}/src/rp2040/hardware_regs/rp2040.svd",
+            "svdFile": "${env:PICO_SDK_PATH}/src/rp2040/hardware_regs/RP2040.svd",
             "runToEntryPoint": "main",
             // Work around for stopping at main on restart
             "postRestartCommands": [

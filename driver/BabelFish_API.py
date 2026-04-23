@@ -156,6 +156,25 @@ def send_data(interface, message):
 
     print("Response: {}".format(''.join([chr(x) for x in response])))
 
+""" Write Command Function """
+""" TODO Must be used in all Functions below """
+def write_command(endpointOUT, endpointIN, command_array, response_message):
+    
+    response = []
+
+    endpointOUT.write(command_array)
+    print("Message " + str(command_array) + " sent successfully")
+    
+    response = endpointIN.read(64)
+
+    print("Response message")
+    for byte in response:
+        print(byte)
+
+    print()
+    #print(response_message," response: {}".format(''.join([chr(x) for x in response])))
+
+    return response
 
 """ Digital Functions """
 def init_DigitalPin_Output(pinID):
@@ -411,107 +430,34 @@ def info_I2C():
     return response
 
 """ SPI Functions """
-def init_SPI(frequency, mode):
+def init_SPI(baudRate):
     global INTERFACE_SPI
     global ENDPOINT_SPI_OUT
     global ENDPOINT_SPI_IN
 
-    frequencyLower = int(frequency / 256)
-    frequencyUpper = int(frequency % 255)
+    command_array = [BFD.SPI_INIT_BUS,  0xff &  baudRate,        0xff & (baudRate >>  8), \
+                                        0xff & (baudRate >> 16), 0xff & (baudRate >> 24)]
 
-    command_string = BFD.SPI_INIT_BUS+ chr(frequencyUpper) + chr(frequencyLower) + chr(mode)
-    
-    ENDPOINT_SPI_OUT.write(command_string)
-    print("Message " + command_string + " sent successfully")
-    
-    response = ENDPOINT_SPI_IN.read(64)
-
-    print("Init_SPI response: {}".format(''.join([chr(x) for x in response])))
-
-    return response
+    return write_command(ENDPOINT_SPI_OUT, ENDPOINT_SPI_IN, command_array, "Init SPI")
 
 def deinit_SPI():
     global INTERFACE_SPI
     global ENDPOINT_SPI_OUT
     global ENDPOINT_SPI_IN
 
-    command_string = BFD.SPI_DEINIT_BUS
+    command_array = [BFD.SPI_DEINIT_BUS]
     
-    ENDPOINT_SPI_OUT.write(command_string)
-    print("Message " + command_string + " sent successfully")
-    
-    response = ENDPOINT_SPI_IN.read(64)
+    return write_command(ENDPOINT_SPI_OUT, ENDPOINT_SPI_IN, command_array, "Deinit SPI")
 
-    print("Deinit_SPI response: {}".format(''.join([chr(x) for x in response])))
-
-    return response
-
-def set_SPI_baudRate(baudRate):
+def transfer_SPI_data(transferMessage, rxSize):
     global INTERFACE_SPI
     global ENDPOINT_SPI_OUT
     global ENDPOINT_SPI_IN
 
-    baudRateLower = int(baudRate / 256)
-    baudRateUpper = int(baudRate % 255)
+    command_array = [BFD.SPI_TRANSFER_DATA , len(transferMessage), rxSize]
+    command_array.extend(transferMessage)
 
-    command_string = BFD.SPI_SET_BAUDRATE + chr(baudRateUpper) + chr(baudRateLower)
-    
-    ENDPOINT_SPI_OUT.write(command_string)
-    print("Message " + command_string + " sent successfully")
-    
-    response = ENDPOINT_SPI_IN.read(64)
-
-    print("Set_SPI_baudRate response: {}".format(''.join([chr(x) for x in response])))
-
-    return response
-
-def get_SPI_baudRate():
-    global INTERFACE_SPI
-    global ENDPOINT_SPI_OUT
-    global ENDPOINT_SPI_IN
-
-    command_string = BFD.SPI_GET_BAUDRATE
-    
-    ENDPOINT_SPI_OUT.write(command_string)
-    print("Message " + command_string + " sent successfully")
-    
-    response = ENDPOINT_SPI_IN.read(64)
-
-    print("Get_SPI_baudRate response: {}".format(''.join([chr(x) for x in response])))
-
-    return response
-
-def write_SPI(dataArray):
-    global INTERFACE_SPI
-    global ENDPOINT_SPI_OUT
-    global ENDPOINT_SPI_IN
-
-    command_string = BFD.SPI_WRITE_DATA + chr(dataArray)
-    
-    ENDPOINT_SPI_OUT.write(command_string)
-    print("Message " + command_string + " sent successfully")
-    
-    response = ENDPOINT_SPI_IN.read(64)
-
-    print("Write_SPI response: {}".format(''.join([chr(x) for x in response])))
-
-    return response
-
-def read_SPI():
-    global INTERFACE_SPI
-    global ENDPOINT_SPI_OUT
-    global ENDPOINT_SPI_IN
-
-    command_string = BFD.SPI_READ_DATA
-    
-    ENDPOINT_SPI_OUT.write(command_string)
-    print("Message " + command_string + " sent successfully")
-    
-    response = ENDPOINT_SPI_IN.read(64)
-
-    print("Read_SPI response: {}".format(''.join([chr(x) for x in response])))
-
-    return response
+    return write_command(ENDPOINT_SPI_OUT, ENDPOINT_SPI_IN, command_array, "Transfer SPI Data")
 
 """ CAN Functions """
 def init_CAN(baudRate):

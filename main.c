@@ -20,13 +20,15 @@ int main()
 {
     timer_hw->dbgpause = 0;
 
-    /* Launch the usb loop on core1 */
-    multicore_launch_core1(core_usb_loop);
+    core_usb_loop();
+    // /* Launch the usb loop on core1 */
+    // multicore_launch_core1(core_usb_loop);
 
-    while(1)
-    {
-        tight_loop_contents();
-    }
+    // while(1)
+    // {
+    //     tight_loop_contents();
+    // }
+
 
     return 0;
 }
