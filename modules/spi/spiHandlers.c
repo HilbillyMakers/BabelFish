@@ -35,6 +35,13 @@
 #define SLAVE_SELECTED      0
 #define SLAVE_UNSELECTED    1
 
+#define DEFAULT_REPEATED_TX_DATA 0
+
+#define BYTE_1              0
+#define BYTE_2              8
+#define BYTE_3              16
+#define BYTE_4              24
+
 enum
 {
     SPI_INIT,
@@ -73,17 +80,17 @@ uint8_t com_spi_commandStringHandler (const uint8_t *commandString, uint8_t comm
 uint8_t com_spi_init        (uint8_t* const configuration,  uint8_t* const responseBuffer, uint8_t* const errorBuffer)
 {
 
-    uint32_t baudRate               =   0u;
-    uint32_t physicalBaudRate       =   0u;
+    uint32_t baudRate              =    0u;
+    uint32_t physicalBaudRate      =    0u;
     
     // Reassemble our uint32_t baudRate from 4 uint8_t variables
-    baudRate                        =   configuration[0]        |
-                                       (configuration[1]) <<  8 |
-                                       (configuration[2]) << 16 |
-                                       (configuration[3]) << 24;
+    baudRate                       =    configuration[0]          << BYTE_1 |
+                                      ((configuration[1]) & 0xff) << BYTE_2 |
+                                      ((configuration[2]) & 0xff) << BYTE_3 |
+                                      ((configuration[3]) & 0xff) << BYTE_4;
 
-    physicalBaudRate                =   spi_init(PROTOTYPE_SPI, baudRate);
-    *((uint32_t *)responseBuffer)   =   physicalBaudRate;
+    physicalBaudRate               =    spi_init(PROTOTYPE_SPI, baudRate);
+    *((uint32_t *)responseBuffer)  =    physicalBaudRate;
 
     gpio_set_function   (SPI_RX_PIN,    GPIO_FUNC_SPI);
     gpio_set_function   (SPI_TX_PIN,    GPIO_FUNC_SPI);
@@ -110,14 +117,16 @@ uint8_t com_spi_transfer    (uint8_t* const hostMessage,    uint8_t* const respo
     uint8_t     rxSize          =   hostMessage[1];
     uint8_t    *txMessage       =  &hostMessage[2];
     int8_t      receivedBytes   =   0u;     
-    //chip select
-    gpio_put            (SPI_CSN_PIN,   SLAVE_SELECTED);
-    //send request to slave
-    spi_write_blocking  (PROTOTYPE_SPI, txMessage, txSize);
-    //receive data from slave
-    receivedBytes   = spi_read_blocking(PROTOTYPE_SPI, 0, responseBuffer, rxSize);
-    //chip deselect
-    gpio_put            (SPI_CSN_PIN,   SLAVE_UNSELECTED);
+
+    //Chip Select
+    gpio_put                (SPI_CSN_PIN,   SLAVE_SELECTED);
+    //Send request to slave
+    spi_write_blocking      (PROTOTYPE_SPI, txMessage, txSize);
+    //Receive data from slave
+    receivedBytes   = \
+        spi_read_blocking   (PROTOTYPE_SPI, DEFAULT_REPEATED_TX_DATA, responseBuffer, rxSize);
+    //Chip Deselect
+    gpio_put                (SPI_CSN_PIN,   SLAVE_UNSELECTED);
 
     return receivedBytes;
 }

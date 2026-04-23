@@ -12,4 +12,12 @@ enum
     ITF_NUM_TOTAL
 };
 
+enum
+{
+    VENDOR_CAN = 0,
+    VENDOR_GP,
+    VENDOR_I2C,
+    VENDOR_SPI
+};
+
 #endif

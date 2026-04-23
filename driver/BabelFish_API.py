@@ -156,12 +156,12 @@ def send_data(interface, message):
 
     print("Response: {}".format(''.join([chr(x) for x in response])))
 
-
-"""" Write Command Function"""
-def write_command(endpointOUT, endpointIN, command_string, response_message):
+""" Write Command Function """
+""" TODO Must be used in all Functions below """
+def write_command(endpointOUT, endpointIN, command_array, response_message):
        
-    endpointOUT.write(command_string)
-    print("Message " + command_string + " sent successfully")
+    endpointOUT.write(command_array)
+    print("Message " + str(command_array) + " sent successfully")
     
     response = endpointIN.read(64)
 
@@ -428,28 +428,29 @@ def init_SPI(baudRate):
     global ENDPOINT_SPI_OUT
     global ENDPOINT_SPI_IN
 
-    command_string = BFD.SPI_INIT_BUS + chr(0xff & (baudRate >> 24)) + chr(0xff & (baudRate >> 16)) + \
-                                        chr(0xff & (baudRate >>  8)) + chr(0xff &  baudRate) 
+    command_array = [BFD.SPI_INIT_BUS,  0xff &  baudRate,        0xff & (baudRate >>  8), \
+                                        0xff & (baudRate >> 16), 0xff & (baudRate >> 24)]
 
-    return write_command(ENDPOINT_SPI_OUT, ENDPOINT_SPI_IN, command_string, "Init SPI")
+    return write_command(ENDPOINT_SPI_OUT, ENDPOINT_SPI_IN, command_array, "Init SPI")
 
 def deinit_SPI():
     global INTERFACE_SPI
     global ENDPOINT_SPI_OUT
     global ENDPOINT_SPI_IN
 
-    command_string = BFD.SPI_DEINIT_BUS
+    command_array = BFD.SPI_DEINIT_BUS
     
-    return write_command(ENDPOINT_SPI_OUT, ENDPOINT_SPI_IN, command_string, "Deinit SPI")
+    return write_command(ENDPOINT_SPI_OUT, ENDPOINT_SPI_IN, command_array, "Deinit SPI")
 
 def transfer_SPI_data(transferMessage, rxSize):
     global INTERFACE_SPI
     global ENDPOINT_SPI_OUT
     global ENDPOINT_SPI_IN
 
-    command_string = BFD.SPI_TRANSFER_DATA + chr(len(transferMessage)) + chr(rxSize) + transferMessage
+    command_array = [BFD.SPI_TRANSFER_DATA , len(transferMessage), rxSize]
+    command_array.extend(transferMessage)
 
-    return write_command(ENDPOINT_SPI_OUT, ENDPOINT_SPI_IN, command_string, "Transfer SPI Data")
+    return write_command(ENDPOINT_SPI_OUT, ENDPOINT_SPI_IN, command_array, "Transfer SPI Data")
 
 """ CAN Functions """
 def init_CAN(baudRate):
