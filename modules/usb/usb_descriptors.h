@@ -12,6 +12,7 @@ enum
     ITF_NUM_TOTAL
 };
 
+/***TODO - temporary solution - must remove vendors ***/
 enum
 {
     VENDOR_CAN = 0,

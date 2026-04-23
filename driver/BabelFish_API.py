@@ -159,13 +159,20 @@ def send_data(interface, message):
 """ Write Command Function """
 """ TODO Must be used in all Functions below """
 def write_command(endpointOUT, endpointIN, command_array, response_message):
-       
+    
+    response = []
+
     endpointOUT.write(command_array)
     print("Message " + str(command_array) + " sent successfully")
     
     response = endpointIN.read(64)
 
-    print(response_message," response: {}".format(''.join([chr(x) for x in response])))
+    print("Response message")
+    for byte in response:
+        print(byte)
+
+    print()
+    #print(response_message," response: {}".format(''.join([chr(x) for x in response])))
 
     return response
 
@@ -438,7 +445,7 @@ def deinit_SPI():
     global ENDPOINT_SPI_OUT
     global ENDPOINT_SPI_IN
 
-    command_array = BFD.SPI_DEINIT_BUS
+    command_array = [BFD.SPI_DEINIT_BUS]
     
     return write_command(ENDPOINT_SPI_OUT, ENDPOINT_SPI_IN, command_array, "Deinit SPI")
 

@@ -11,7 +11,7 @@ extern void ep_can_rx_handler   (uint8_t const *buf, uint16_t len, uint8_t const
 extern void ep_gp_rx_handler    (uint8_t const *buf, uint16_t len, uint8_t const *responseBuffer, uint16_t *responseSize);
 extern void ep_i2c_rx_handler   (uint8_t const *buf, uint16_t len, uint8_t const *responseBuffer, uint16_t *responseSize);
 
-extern uint8_t com_spi_commandStringHandler (uint8_t *commandString, uint8_t commandStringLength, uint8_t *responseBuffer, uint8_t *errorBuffer);
+extern uint8_t com_spi_commandStringHandler (const uint8_t *commandString, uint8_t commandStringLength, uint8_t *responseBuffer, uint8_t *errorBuffer);
 extern uint8_t com_i2c_commandStringHandler (const uint8_t *commandString,  uint8_t commandStringLength, uint8_t *responseBuffer, uint8_t *errorBuffer);
 
 // extern void ep_can_tx_handler   (uint16_t len);
@@ -63,7 +63,7 @@ int runUSBLoop(void)
 }
 
 
-void tud_vendor_rx_cb(uint8_t idx, const uint8_t *buffer, uint32_t bufsize)
+void tud_vendor_rx_cb(uint8_t idx, const uint8_t *buffer, uint16_t bufsize)
 {
     uint8_t response_size;
     uint8_t response[64];
@@ -88,7 +88,7 @@ void tud_vendor_rx_cb(uint8_t idx, const uint8_t *buffer, uint32_t bufsize)
         
         case ITF_IDX_SPI:
             response_size = com_spi_commandStringHandler (buffer, bufsize, response, &error_buffer);
-
+            tud_vendor_n_write(idx, response, response_size);
         break;
         
         default:

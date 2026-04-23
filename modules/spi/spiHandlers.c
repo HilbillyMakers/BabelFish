@@ -1,8 +1,8 @@
-#include "spiHandlers.h"
 #include "hardware/spi.h"
 #include "../devicePins/device_pins.h"
 #include "pico/stdlib.h"
 #include <stdio.h>
+#include <string.h>
 
 ///TODO: 
 /* 
@@ -49,9 +49,9 @@ enum
     SPI_TRANSFER
 };
 
-uint8_t com_spi_init        (uint8_t* const configuration,  uint8_t* const responseBuffer, uint8_t* const errorBuffer);
-uint8_t com_spi_deinit      (                               uint8_t* const responseBuffer, uint8_t* const errorBuffer);
-uint8_t com_spi_transfer    (uint8_t* const hostMessage,    uint8_t* const responseBuffer, uint8_t* const errorBuffer);
+uint8_t com_spi_init        (const uint8_t* configuration,  uint8_t* responseBuffer, uint8_t* errorBuffer);
+uint8_t com_spi_deinit      (                               uint8_t* responseBuffer, uint8_t* errorBuffer);
+uint8_t com_spi_transfer    (const uint8_t* hostMessage,    uint8_t* responseBuffer, uint8_t* errorBuffer);
 
 
 uint8_t com_spi_commandStringHandler (const uint8_t *commandString, uint8_t commandStringLength, uint8_t *responseBuffer, uint8_t *errorBuffer)
@@ -77,7 +77,7 @@ uint8_t com_spi_commandStringHandler (const uint8_t *commandString, uint8_t comm
     return responseSize;
 }
 
-uint8_t com_spi_init        (uint8_t* const configuration,  uint8_t* const responseBuffer, uint8_t* const errorBuffer)
+uint8_t com_spi_init        (const uint8_t* configuration,  uint8_t* responseBuffer, uint8_t* errorBuffer)
 {
 
     uint32_t baudRate              =    0u;
@@ -104,18 +104,21 @@ uint8_t com_spi_init        (uint8_t* const configuration,  uint8_t* const respo
     return sizeof(physicalBaudRate);
 }
 
-uint8_t com_spi_deinit      (uint8_t* const responseBuffer, uint8_t* const errorBuffer)
+uint8_t com_spi_deinit      (uint8_t* responseBuffer, uint8_t* errorBuffer)
 {
     spi_deinit(PROTOTYPE_SPI);
 
-    return 0;
+    char deinit_response[] = "SPI Deinit Successful";
+    memcpy(responseBuffer, deinit_response, sizeof(deinit_response));
+
+    return sizeof(deinit_response);
 }
 
-uint8_t com_spi_transfer    (uint8_t* const hostMessage,    uint8_t* const responseBuffer, uint8_t* const errorBuffer)
+uint8_t com_spi_transfer    (const uint8_t* hostMessage,   uint8_t* responseBuffer, uint8_t* errorBuffer)
 {
-    uint8_t     txSize          =   hostMessage[0];
-    uint8_t     rxSize          =   hostMessage[1];
-    uint8_t    *txMessage       =  &hostMessage[2];
+    const uint8_t     txSize    =   hostMessage[0];
+    const uint8_t     rxSize    =   hostMessage[1];
+    const uint8_t    *txMessage =  &hostMessage[2];
     int8_t      receivedBytes   =   0u;     
 
     //Chip Select
