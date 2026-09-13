@@ -34,6 +34,15 @@ static inline uint8_t com_i2c_write    (const uint8_t* hostMessage,    uint8_t* 
 static inline uint8_t com_i2c_read     (const uint8_t* hostMessage,    uint8_t* const responseBuffer, uint8_t* const errorBuffer);
 static inline uint8_t com_i2c_info     (                               uint8_t* const responseBuffer, uint8_t* const errorBuffer);
 
+/**
+ * @brief Process the command string received on the i2c interface
+ * 
+ * @param commandString         buffer containing the command descriptor sequence
+ * @param commandStringLength   length of the descriptor sequence
+ * @param responseBuffer        buffer for storing the generated response
+ * @param errorBuffer           buffer for storing the generated error response
+ * @return uint8_t              the length of the response buffer
+ */
 uint8_t com_i2c_commandStringHandler (const uint8_t *commandString,  uint8_t commandStringLength, uint8_t *responseBuffer, uint8_t *errorBuffer)
 {
     uint8_t     command         =   commandString[0];
@@ -64,7 +73,15 @@ uint8_t com_i2c_commandStringHandler (const uint8_t *commandString,  uint8_t com
     return responseSize;
 }
 
-uint8_t com_i2c_init        (const uint8_t* configuration, uint8_t* const responseBuffer, uint8_t* const errorBuffer)
+/**
+ * @brief Initialize the I2C module using the provided configuration
+ * 
+ * @param configuration     Buffer containing the initialization data
+ * @param setBaudrate       buffer for storing the actual physical set baudrate by the init function
+ * @param errorBuffer       buffer for storing the generated error response
+ * @return uint8_t          the length of the response buffer
+ */
+uint8_t com_i2c_init        (const uint8_t* configuration, uint8_t* const setBaudrate, uint8_t* const errorBuffer)
 {
     i2c_mode_e  i2c_mode                = I2C_MASTER_MODE;
     uint32_t    baudRate                = 0u;
@@ -78,7 +95,7 @@ uint8_t com_i2c_init        (const uint8_t* configuration, uint8_t* const respon
 
     physicalBaudRate    = i2c_init(PROTOTYPE_I2C, baudRate);
     
-    *((uint32_t *)responseBuffer)   =   physicalBaudRate;
+    *((uint32_t *)setBaudrate)   =   physicalBaudRate;
     
     gpio_set_function   (I2C_SDA_PIN, GPIO_FUNC_I2C);
     gpio_set_function   (I2C_SCL_PIN, GPIO_FUNC_I2C);
@@ -90,6 +107,13 @@ uint8_t com_i2c_init        (const uint8_t* configuration, uint8_t* const respon
     return sizeof(physicalBaudRate);
 }
 
+/**
+ * @brief Deinitialize I2C peripheral module
+ * 
+ * @param responseBuffer 
+ * @param errorBuffer 
+ * @return uint8_t 
+ */
 uint8_t com_i2c_deinit      (uint8_t* const responseBuffer, uint8_t* const errorBuffer)
 {
     i2c_deinit(PROTOTYPE_I2C);
@@ -97,6 +121,14 @@ uint8_t com_i2c_deinit      (uint8_t* const responseBuffer, uint8_t* const error
     return 0;
 }
 
+/**
+ * @brief Read a specified number of bytes from the device selected by the address
+ * 
+ * @param hostMessage       message containing the target address and the read message size
+ * @param responseBuffer    container for the received message
+ * @param errorBuffer       buffer for storing the generated error response
+ * @return uint8_t          the length of the response buffer
+ */
 uint8_t com_i2c_read        (const uint8_t* hostMessage,    uint8_t* const responseBuffer, uint8_t* const errorBuffer)
 {
     uint8_t     address         =  hostMessage[0];
@@ -119,6 +151,14 @@ uint8_t com_i2c_read        (const uint8_t* hostMessage,    uint8_t* const respo
     return receivedBytes;
 }
 
+/**
+ * @brief Write a specified number of bytes to the device selected by the address
+ * 
+ * @param hostMessage       message containing the target address and the written message size
+ * @param responseBuffer    currently unused, kept for API uniformity
+ * @param errorBuffer       buffer for storing the generated error response
+ * @return uint8_t          the length of the response buffer
+ */
 uint8_t com_i2c_write        (const uint8_t* hostMessage,    uint8_t* const responseBuffer, uint8_t* const errorBuffer)
 {
     const uint8_t   address     =  hostMessage[0];
@@ -143,12 +183,20 @@ uint8_t com_i2c_write        (const uint8_t* hostMessage,    uint8_t* const resp
     return sentBytes;
 }
 
+/**
+ * @brief Return the configuration details of the I2C peripheral
+ * 
+ * @param responseBuffer    Buffer for the I2C info data
+ * @param errorBuffer       buffer for storing the generated error response
+ * @return uint8_t          the length of the response buffer
+ */
 uint8_t com_i2c_info   (uint8_t* const responseBuffer, uint8_t* const errorBuffer)
 {
-    char constantResponseBuffer[]   = "I2C port version 0.1";
-    uint8_t responseSize            = sizeof(constantResponseBuffer) / sizeof(char);
-    snprintf((char*)responseBuffer, responseSize, "%s", constantResponseBuffer);
-    *errorBuffer                    = E_I2C_OK;
+    char    constantResponseBuffer[]    = "I2C port version 0.1";
+    uint8_t responseSize                = sizeof(constantResponseBuffer) / sizeof(char);
 
-    return responseSize;
+    snprintf((char*)responseBuffer, responseSize, "%s", constantResponseBuffer);
+    *errorBuffer                        = E_I2C_OK;
+
+    return  responseSize;
 }
