@@ -17,3 +17,8 @@ uint8_t com_can_commandStringHandler (uint8_t *commandString,  uint8_t commandSt
     responseSize = sizeof("Functionality not implemented");
     return responseSize;
 }
+
+uint8_t com_can_tx_commandStringHandler (uint8_t *commandString,  uint8_t commandStringLength, uint8_t *responseBuffer, uint8_t *errorBuffer)
+{
+    return 0;
+}
