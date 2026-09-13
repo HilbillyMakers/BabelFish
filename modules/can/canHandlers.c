@@ -16,5 +16,5 @@ uint8_t com_can_rx_commandStringHandler (uint8_t *commandString,  uint8_t comman
 
 uint8_t com_can_tx_commandStringHandler (uint8_t *commandString,  uint8_t commandStringLength, uint8_t *responseBuffer, uint8_t *errorBuffer)
 {
-
+    return 0;
 }

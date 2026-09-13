@@ -24,69 +24,66 @@ INTERFACE_ID_I2C              = 4
 INTERFACE_ID_SPI              = 5
 
 """ Functions """
-GP_FUNCTION_DIGITAL           = chr(0)
-GP_FUNCTION_ANALOG            = chr(1)
-GP_FUNCTION_PWM               = chr(2)
+GP_FUNCTION_DIGITAL           = 0
+GP_FUNCTION_ANALOG            = 1
+GP_FUNCTION_PWM               = 2
 
 """ Digital IO Command """
 
-DIGITAL_INIT_PIN              = chr(0)
-DIGITAL_DEINIT_PIN            = chr(1)
-DIGITAL_READ_PIN              = chr(2)
-DIGITAL_WRITE_PIN             = chr(3)
+DIGITAL_INIT_PIN              = 0
+DIGITAL_DEINIT_PIN            = 1
+DIGITAL_READ_PIN              = 2
+DIGITAL_WRITE_PIN             = 3
 
-DIGITAL_DIRECTION_IN          = chr(0)
-DIGITAL_DIRECTION_OUT         = chr(1)
+DIGITAL_DIRECTION_IN          = 0
+DIGITAL_DIRECTION_OUT         = 1
 
 """ PWM Commands """
-PWM_INIT_PIN                  = chr(0)
-PWM_DEINIT_PIN                = chr(1)
-PWM_GET_WRAP_SIZE             = chr(2)
-PWM_SET_WRAP_SIZE             = chr(3)
-PWM_GET_DUTY_CYCLE            = chr(4)
-PWM_SET_DUTY_CYCLE            = chr(5)
-PWM_GET_FREQUENCY             = chr(6)
-PWM_SET_FREQUENCY             = chr(7)
+PWM_INIT_PIN                  = 0
+PWM_DEINIT_PIN                = 1
+PWM_GET_WRAP_SIZE             = 2
+PWM_SET_WRAP_SIZE             = 3
+PWM_GET_DUTY_CYCLE            = 4
+PWM_SET_DUTY_CYCLE            = 5
+PWM_GET_FREQUENCY             = 6
+PWM_SET_FREQUENCY             = 7
 
 """ PWM Direction """
-PWM_DIRECTION_OUT             = chr(0)
-PWM_DIRECTION_IN              = chr(1)
+PWM_DIRECTION_OUT             = 0
+PWM_DIRECTION_IN              = 1
 
 """ SPI Commands """
-SPI_INIT_BUS                  = chr(0)
-SPI_DEINIT_BUS                = chr(1)
-SPI_SET_BAUDRATE              = chr(2)
-SPI_GET_BAUDRATE              = chr(3)
-SPI_WRITE_DATA                = chr(4)
-SPI_READ_DATA                 = chr(5)
+SPI_INIT_BUS                  = 0
+SPI_DEINIT_BUS                = 1
+SPI_TRANSFER_DATA             = 2
 
 """ I2C Commands """
-I2C_INIT_BUS                  = chr(0)
-I2C_DEINIT_BUS                = chr(1)
-I2C_SET_BAUDRATE              = chr(2)
-I2C_GET_BAUDRATE              = chr(3)
-I2C_WRITE_DATA                = chr(4)
-I2C_READ_DATA                 = chr(5)
-I2C_SCAN_BUS                  = chr(6)
-I2C_INFO                      = chr(7)
+I2C_INIT_BUS                  = 0
+I2C_DEINIT_BUS                = 1
+I2C_SET_BAUDRATE              = 2
+I2C_GET_BAUDRATE              = 3
+I2C_WRITE_DATA                = 4
+I2C_READ_DATA                 = 5
+I2C_SCAN_BUS                  = 6
+I2C_INFO                      = 7
 
 """ CAN Commands """
-CAN_INIT_BUS                  = chr(0)
-CAN_DEINIT_BUS                = chr(1)
-CAN_SET_BAUDRATE              = chr(2)
-CAN_GET_BAUDRATE              = chr(3)
-CAN_DETECT_BAUDRATE           = chr(4)
-CAN_WRITE_FRAME               = chr(5)
-CAN_READ_FRAME                = chr(6)
-CAN_SCAN_BUS                  = chr(7)
+CAN_INIT_BUS                  = 0
+CAN_DEINIT_BUS                = 1
+CAN_SET_BAUDRATE              = 2
+CAN_GET_BAUDRATE              = 3
+CAN_DETECT_BAUDRATE           = 4
+CAN_WRITE_FRAME               = 5
+CAN_READ_FRAME                = 6
+CAN_SCAN_BUS                  = 7
 
 """ Digital Errors """
 
-DIGITAL_E_OK                  = chr(0)
+DIGITAL_E_OK                  = 0
 
-DIGITAL_E_UNINITIALIZED       = chr(1)
-DIGITAL_E_INIT_FAILED         = chr(2)
-DIGITAL_E_DEINIT_FAILED       = chr(3)
-DIGITAL_E_UNKNOWN_COMMAND     = chr(4)
+DIGITAL_E_UNINITIALIZED       = 1
+DIGITAL_E_INIT_FAILED         = 2
+DIGITAL_E_DEINIT_FAILED       = 3
+DIGITAL_E_UNKNOWN_COMMAND     = 4
 
-DIGITAL_E_UNKNOWN             = chr(5)
+DIGITAL_E_UNKNOWN             = 5

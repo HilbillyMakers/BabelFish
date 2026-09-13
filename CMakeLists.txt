@@ -49,4 +49,5 @@ target_link_libraries(${PROJECT_NAME}
         lib_i2cIf
         lib_spiIf
         lib_uartIf
+        hardware_spi
 )
